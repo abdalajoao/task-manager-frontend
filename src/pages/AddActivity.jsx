@@ -1,57 +1,80 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { createActivity } from "../services/api";
 
 export default function AddActivity() {
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    name: "",
+    type: "",
+    date: "",
+  });
+
+  function handleChange(e) {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const result = await createActivity(form);
+
+    if (result) {
+      navigate("/activities");
+    }
+  }
+
   return (
-    <div>
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <Link
-            to="/activities"
-            className="text-sky-400 hover:text-sky-300"
-          >
-            ← Back to Activities
-          </Link>
+    <div className="p-6">
+      <div className="mb-6">
+        <Link to="/activities" className="text-sky-400">
+          ← Back
+        </Link>
 
-          <h1 className="text-4xl font-bold mt-3">
-            Add Activity
-          </h1>
-        </div>
+        <h1 className="text-3xl font-bold mt-2">
+          Add Activity
+        </h1>
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
-        <form className="space-y-4">
-          <div>
-            <label className="block mb-2">Activity Name</label>
-            <input
-              type="text"
-              className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700"
-            />
-          </div>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4"
+      >
+        <input
+          name="name"
+          placeholder="Activity name"
+          value={form.name}
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-slate-800"
+        />
 
-          <div>
-            <label className="block mb-2">Type</label>
-            <input
-              type="text"
-              className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700"
-            />
-          </div>
+        <input
+          name="type"
+          placeholder="Type"
+          value={form.type}
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-slate-800"
+        />
 
-          <div>
-            <label className="block mb-2">Date</label>
-            <input
-              type="date"
-              className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700"
-            />
-          </div>
+        <input
+          type="date"
+          name="date"
+          value={form.date}
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-slate-800"
+        />
 
-          <button
-            type="submit"
-            className="bg-sky-500 hover:bg-sky-600 px-5 py-3 rounded-lg"
-          >
-            Save Activity
-          </button>
-        </form>
-      </div>
+        <button
+          type="submit"
+          className="bg-sky-500 hover:bg-sky-600 px-4 py-2 rounded"
+        >
+          Save Activity
+        </button>
+      </form>
     </div>
   );
 }
