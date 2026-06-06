@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
 export default function CompletedCarousel({ activities }) {
-  // 🔥 aceita done OU completed (evita bug)
+  
   const completed = activities.filter(
-    (a) => a.status === "done" || a.status === "completed"
+    (a) => a.status === "completed"
   );
 
   if (!completed.length) {
