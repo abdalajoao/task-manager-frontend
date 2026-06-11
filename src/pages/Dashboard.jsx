@@ -27,8 +27,6 @@ export default function Dashboard() {
     );
   }, []);
 
-  const total = activities.length;
-
   const completedActivities = activities.filter(
     (a) => a.status === "completed"
   );
@@ -95,32 +93,9 @@ export default function Dashboard() {
         />
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-          <p className="text-slate-400">Total</p>
-          <p className="text-3xl font-bold text-sky-400">
-            {total}
-          </p>
-        </div>
+      {/* Planned Activities */}
 
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-          <p className="text-slate-400">Planned</p>
-          <p className="text-3xl font-bold text-sky-400">
-            {plannedActivities.length}
-          </p>
-        </div>
-
-        <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-          <p className="text-slate-400">Completed</p>
-          <p className="text-3xl font-bold text-sky-400">
-            {completedActivities.length}
-          </p>
-        </div>
-      </div>
-
-      <CompletedCarousel activities={activities} />
-
-      <div className="mt-10">
+      <div className="mb-12">
         <h2 className="text-2xl font-bold text-sky-400 mb-4">
           Planned Activities
         </h2>
@@ -180,9 +155,19 @@ export default function Dashboard() {
         )}
       </div>
 
+      {/* Completed Activities */}
+
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-sky-400 mb-4">
+          Completed Activities
+        </h2>
+
+        <CompletedCarousel activities={activities} />
+      </div>
+
       <Link
         to="/activities"
-        className="text-sky-400 hover:text-sky-300 mt-8 inline-block"
+        className="text-sky-400 hover:text-sky-300 mt-4 inline-block"
       >
         View all activities →
       </Link>

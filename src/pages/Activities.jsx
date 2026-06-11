@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { getActivities } from "../services/api";
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Activities() {
   const [activities, setActivities] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getActivities().then((data) =>
@@ -69,12 +71,25 @@ export default function Activities() {
               </span>
             </div>
 
-            <Link
-              to={`/activity/${a.id}`}
-              className="text-sky-400 text-sm mt-3 inline-block hover:text-sky-300"
+            <div className="flex gap-4 mt-3">
+            
+            <div className="flex gap-3 mt-3">
+                
+            <button
+                onClick={() => navigate(`/activity/${a.id}`)}
+                className="bg-sky-500 hover:bg-sky-600 text-white text-sm px-3 py-1 rounded-lg transition"
             >
-              View details →
-            </Link>
+                View details
+            </button>
+
+            <button
+                onClick={() => navigate(`/activity/edit/${a.id}`)}
+                className="bg-sky-500 hover:bg-sky-600 text-white text-sm px-3 py-1 rounded-lg transition"
+                >
+                Update
+            </button>
+</div>
+</div>
           </div>
         ))}
       </div>

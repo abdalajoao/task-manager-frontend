@@ -1,35 +1,19 @@
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
-import { useState } from "react";
 
 export default function ActivityCard({ activity }) {
   if (!activity) return null;
 
-  const [isFavorite, setIsFavorite] = useState(
-    activity.favorite || false
-  );
-
   return (
     <div className="min-w-[250px] bg-slate-900 border border-slate-800 p-5 rounded-xl shadow-md">
-      
       <div className="flex justify-between items-start">
         <h3 className="text-xl font-bold text-white">
           {activity.name || "Untitled"}
         </h3>
 
-        <button
-          onClick={() => setIsFavorite(!isFavorite)}
-          className="transition hover:scale-110"
-          aria-label="Favoritar"
-        >
-          <Star
-            className={`w-5 h-5 ${
-              isFavorite
-                ? "fill-yellow-400 text-yellow-400"
-                : "text-gray-300"
-            }`}
-          />
-        </button>
+        {activity.favorite && (
+          <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+        )}
       </div>
 
       <p className="text-slate-400 text-sm mt-1">

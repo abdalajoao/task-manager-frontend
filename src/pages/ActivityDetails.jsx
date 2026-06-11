@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getActivity, deleteActivity, toggleFavorite } from "../services/api";
+import {
+  getActivity,
+  deleteActivity,
+  toggleFavorite,
+} from "../services/api";
 import { Trash2, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function ActivityDetails() {
   const { id } = useParams();
@@ -12,7 +17,7 @@ export default function ActivityDetails() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  // ─── Fetch activity by ID on mount ───────────────────────────
+  // Fetch activity on page load
   useEffect(() => {
     getActivity(id).then((data) => {
       setActivity(data);
@@ -21,34 +26,57 @@ export default function ActivityDetails() {
     });
   }, [id]);
 
-  // ─── Delete the activity and redirect to activities list ─────
+  // Delete activity
   const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this activity?")) return;
+    if (!window.confirm("Are you sure you want to delete this activity?"))
+      return;
+
     setDeleting(true);
     await deleteActivity(id);
     navigate("/activities");
   };
+  
+  // Update status
+  <Link
+  to={`/activity/edit/${id}`}
+  className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-xl text-sm font-medium"
+  >
+  Update
+  </Link>
 
-  // ─── Toggle favorite state and persist to API ─────────────────
+  // Toggle favorite status and persist to API
   const handleFavorite = async () => {
     const next = !isFavorite;
+
     setIsFavorite(next);
-    await toggleFavorite(id, next);
+
+    const updated = await toggleFavorite(id, next);
+
+    if (updated) {
+      setActivity(updated);
+    }
   };
 
-  if (loading) return <div className="p-6 text-slate-400">Loading...</div>;
-  if (!activity) return <div className="p-6 text-red-400">Activity not found</div>;
+  if (loading) {
+    return <div className="p-6 text-slate-400">Loading...</div>;
+  }
+
+  if (!activity) {
+    return (
+      <div className="p-6 text-red-400">
+        Activity not found
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
-      {/* ── Header row: title + action buttons ── */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-4xl font-bold text-sky-400">
           {activity.name || "Untitled"}
         </h1>
 
         <div className="flex items-center gap-3">
-          {/* Favorite toggle button */}
           <button
             onClick={handleFavorite}
             aria-label="Toggle favorite"
@@ -63,7 +91,6 @@ export default function ActivityDetails() {
             />
           </button>
 
-          {/* Delete button */}
           <button
             onClick={handleDelete}
             disabled={deleting}
@@ -75,13 +102,19 @@ export default function ActivityDetails() {
         </div>
       </div>
 
-      {/* ── Activity detail card ── */}
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-2">
         <p>Type: {activity.type || "N/A"}</p>
         <p>Status: {activity.status || "planned"}</p>
         <p>Date: {activity.date || "N/A"}</p>
-        {activity.duration && <p>Duration: {activity.duration} min</p>}
-        {activity.calories && <p>Calories: {activity.calories} kcal</p>}
+
+        {activity.duration && (
+          <p>Duration: {activity.duration} min</p>
+        )}
+
+        {activity.calories && (
+          <p>Calories: {activity.calories} kcal</p>
+        )}
+
         <p>Notes: {activity.notes || "No notes"}</p>
       </div>
     </div>

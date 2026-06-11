@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Activities from "./pages/Activities";
 import ActivityDetails from "./pages/ActivityDetails";
 import AddActivity from "./pages/AddActivity";
+import EditActivity from "./pages/EditActivity";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/activities" element={<Activities />} />
           <Route path="/activity/:id" element={<ActivityDetails />} />
           <Route path="/add" element={<AddActivity />} />
+          <Route path="/activity/edit/:id" element={<EditActivity />} />
         </Routes>
       </main>
     </div>

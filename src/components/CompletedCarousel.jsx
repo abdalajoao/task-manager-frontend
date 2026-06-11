@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+
 export default function CompletedCarousel({ activities }) {
   
   const completed = activities.filter(
