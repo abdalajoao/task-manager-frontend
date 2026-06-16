@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 
-
 export default function CompletedCarousel({ activities }) {
-  
   const completed = activities.filter(
     (a) => a.status === "completed"
   );
@@ -17,10 +15,6 @@ export default function CompletedCarousel({ activities }) {
 
   return (
     <div className="mt-10">
-      <h2 className="text-2xl font-bold text-sky-400 mb-4">
-        Completed Activities
-      </h2>
-
       <div className="flex gap-4 overflow-x-auto pb-4">
         {completed.map((a) => (
           <div
