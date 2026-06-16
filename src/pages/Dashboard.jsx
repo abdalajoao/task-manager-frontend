@@ -19,136 +19,96 @@ export default function Dashboard() {
   // Fetch all activities
   useEffect(() => {
     getActivities().then((data) =>
-      setActivities(
-        Array.isArray(data)
-          ? data
-          : data.activities || []
-      )
+      setActivities(Array.isArray(data) ? data : data.activities || [])
     );
   }, []);
-
-  const completedActivities = activities.filter(
-    (a) => a.status === "completed"
-  );
 
   const plannedActivities = activities
     .filter((a) => a.status === "planned")
     .filter((a) =>
       search.trim() === ""
         ? true
-        : (a.name || "")
-            .toLowerCase()
-            .includes(search.toLowerCase())
+        : (a.name || "").toLowerCase().includes(search.toLowerCase())
     )
-    .filter((a) =>
-      filters.onlyFavorites
-        ? a.favorite === true
-        : true
-    )
+    .filter((a) => (filters.onlyFavorites ? a.favorite === true : true))
     .sort((a, b) => {
-      if (filters.sort === "az") {
-        return (a.name || "").localeCompare(
-          b.name || ""
-        );
-      }
-
-      if (filters.sort === "za") {
-        return (b.name || "").localeCompare(
-          a.name || ""
-        );
-      }
-
-      if (filters.sort === "oldest") {
-        return (
-          new Date(a.date || 0) -
-          new Date(b.date || 0)
-        );
-      }
-
-      return (
-        new Date(b.date || 0) -
-        new Date(a.date || 0)
-      );
+      if (filters.sort === "az")
+        return (a.name || "").localeCompare(b.name || "");
+      if (filters.sort === "za")
+        return (b.name || "").localeCompare(a.name || "");
+      if (filters.sort === "oldest")
+        return new Date(a.date || 0) - new Date(b.date || 0);
+      return new Date(b.date || 0) - new Date(a.date || 0);
     });
 
   return (
     <div className="p-6">
-      <h1 className="text-4xl font-bold text-sky-400 mb-4">
-        Dashboard
-      </h1>
+      <h1 className="text-4xl font-bold text-sky-400 mb-4">Dashboard</h1>
 
       <div className="mb-8">
-        <SearchBar
-          onSearch={setSearch}
-          onFilterClick={() =>
-            setShowFilter(true)
-          }
-        />
+        <SearchBar onSearch={setSearch} onFilterClick={() => setShowFilter(true)} />
       </div>
 
       {showFilter && (
-        <FilterModal
-          onClose={() => setShowFilter(false)}
-          onApply={setFilters}
-        />
+        <FilterModal onClose={() => setShowFilter(false)} onApply={setFilters} />
       )}
 
       {/* Planned Activities */}
-
       <div className="mb-12">
         <h2 className="text-2xl font-bold text-sky-400 mb-4">
           Planned Activities
         </h2>
 
         {plannedActivities.length === 0 ? (
-          <p className="text-slate-400">
-            No planned activities found.
-          </p>
+          <p className="text-slate-400">No planned activities found.</p>
         ) : (
           <div className="flex gap-4 overflow-x-auto pb-4">
             {plannedActivities.map((a) => (
               <div
                 key={a.id}
-                className="min-w-[250px] bg-slate-900 border border-slate-800 rounded-xl p-4 flex-shrink-0"
+                className="min-w-[250px] bg-slate-900 border border-slate-800 rounded-xl flex-shrink-0 overflow-hidden"
               >
-                <div className="flex justify-between items-start">
-                  <h3 className="font-bold">
-                    {a.name || "Untitled"}
-                  </h3>
+                {/* Activity photo — only renders if a photo exists */}
+                {a.photo && (
+                  <img
+                    src={a.photo}
+                    alt={a.name}
+                    className="w-full h-32 object-cover"
+                  />
+                )}
 
-                  {a.favorite && (
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  )}
+                <div className="p-4">
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-bold">{a.name || "Untitled"}</h3>
+                    {a.favorite && (
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    )}
+                  </div>
+
+                  <p className="text-slate-400 text-sm">{a.type || "N/A"}</p>
+
+                  <p className="text-xs text-slate-500">{a.date || ""}</p>
+
+                  <div className="flex gap-3 mt-2">
+                    {a.duration && (
+                      <span className="text-xs text-slate-400">
+                        ⏱ {a.duration}min
+                      </span>
+                    )}
+                    {a.calories && (
+                      <span className="text-xs text-slate-400">
+                        🔥 {a.calories}kcal
+                      </span>
+                    )}
+                  </div>
+
+                  <Link
+                    to={`/activity/${a.id}`}
+                    className="text-sky-400 text-sm mt-2 inline-block"
+                  >
+                    View →
+                  </Link>
                 </div>
-
-                <p className="text-slate-400 text-sm">
-                  {a.type || "N/A"}
-                </p>
-
-                <p className="text-xs text-slate-500">
-                  {a.date || ""}
-                </p>
-
-                <div className="flex gap-3 mt-2">
-                  {a.duration && (
-                    <span className="text-xs text-slate-400">
-                      ⏱ {a.duration}min
-                    </span>
-                  )}
-
-                  {a.calories && (
-                    <span className="text-xs text-slate-400">
-                      🔥 {a.calories}kcal
-                    </span>
-                  )}
-                </div>
-
-                <Link
-                  to={`/activity/${a.id}`}
-                  className="text-sky-400 text-sm mt-2 inline-block"
-                >
-                  View →
-                </Link>
               </div>
             ))}
           </div>
@@ -156,12 +116,10 @@ export default function Dashboard() {
       </div>
 
       {/* Completed Activities */}
-
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-sky-400 mb-4">
           Completed Activities
         </h2>
-
         <CompletedCarousel activities={activities} />
       </div>
 

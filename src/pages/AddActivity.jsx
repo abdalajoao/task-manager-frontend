@@ -20,7 +20,7 @@ export default function AddActivity() {
     setActivity({ ...activity, [name]: value });
   }
 
-  // Handle photo selection and generate a base64 preview
+  // Handle photo
   function handlePhotoChange(event) {
     const file = event.target.files[0];
     if (!file) return;
