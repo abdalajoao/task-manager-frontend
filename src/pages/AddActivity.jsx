@@ -13,23 +13,9 @@ export default function AddActivity() {
     notes: "",
   });
 
-  const [photoPreview, setPhotoPreview] = useState(null);
-
   function handleChange(event) {
     const { name, value } = event.target;
     setActivity({ ...activity, [name]: value });
-  }
-
-  // Handle photo
-  function handlePhotoChange(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPhotoPreview(reader.result);
-      setActivity((prev) => ({ ...prev, photo: reader.result }));
-    };
-    reader.readAsDataURL(file);
   }
 
   async function handleSubmit(event) {
@@ -105,29 +91,6 @@ export default function AddActivity() {
               onChange={handleChange}
               className="w-full p-3 rounded-lg bg-slate-800 border border-slate-700"
             />
-          </div>
-
-          {/* Photo upload field */}
-          <div>
-            <label className="block mb-2">Activity Photo (optional)</label>
-            <label className="flex items-center gap-3 cursor-pointer w-fit">
-              <span className="bg-slate-700 hover:bg-slate-600 text-sm px-4 py-2 rounded-lg transition">
-                Choose photo
-              </span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoChange}
-                className="hidden"
-              />
-            </label>
-            {photoPreview && (
-              <img
-                src={photoPreview}
-                alt="Activity preview"
-                className="mt-3 rounded-xl object-cover w-full max-h-64"
-              />
-            )}
           </div>
 
           <button

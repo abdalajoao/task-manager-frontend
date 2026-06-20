@@ -17,15 +17,12 @@ export default function EditActivity() {
     favorite: false,
   });
 
-  const [photoPreview, setPhotoPreview] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Load existing activity
   useEffect(() => {
     getActivity(id).then((data) => {
       setActivity(data);
-      // Restore existing photo preview if available
-      if (data?.photo) setPhotoPreview(data.photo);
       setLoading(false);
     });
   }, [id]);
@@ -35,18 +32,6 @@ export default function EditActivity() {
     const { name, value } = e.target;
     setActivity((prev) => ({ ...prev, [name]: value }));
   };
-
-  // Handle photo selection and generate a base64 preview
-  function handlePhotoChange(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPhotoPreview(reader.result);
-      setActivity((prev) => ({ ...prev, photo: reader.result }));
-    };
-    reader.readAsDataURL(file);
-  }
 
   // Submit update
   const handleSubmit = async (e) => {
@@ -111,31 +96,6 @@ export default function EditActivity() {
           className="w-full p-2 rounded bg-slate-900 border border-slate-700"
           placeholder="Notes"
         />
-
-        {/* Photo upload field */}
-        <div>
-          <label className="block mb-2 text-slate-300">
-            Activity Photo (optional)
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer w-fit">
-            <span className="bg-slate-700 hover:bg-slate-600 text-sm px-4 py-2 rounded-lg transition">
-              {photoPreview ? "Change photo" : "Choose photo"}
-            </span>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoChange}
-              className="hidden"
-            />
-          </label>
-          {photoPreview && (
-            <img
-              src={photoPreview}
-              alt="Activity preview"
-              className="mt-3 rounded-xl object-cover w-full max-h-64"
-            />
-          )}
-        </div>
 
         <button
           type="submit"

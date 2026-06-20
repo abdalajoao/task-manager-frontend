@@ -68,15 +68,6 @@ export default function Dashboard() {
                 key={a.id}
                 className="min-w-[250px] bg-slate-900 border border-slate-800 rounded-xl flex-shrink-0 overflow-hidden"
               >
-                {/* Activity photo — only renders if a photo exists */}
-                {a.photo && (
-                  <img
-                    src={a.photo}
-                    alt={a.name}
-                    className="w-full h-32 object-cover"
-                  />
-                )}
-
                 <div className="p-4">
                   <div className="flex justify-between items-start">
                     <h3 className="font-bold">{a.name || "Untitled"}</h3>
