@@ -39,6 +39,4 @@ The goal of the app is to make activity management simple, organized, and easy t
 - How to filter and search through data
 - How to manage state using React
 
-## Authors
 
-Created by Jeronimo De Haro and Joao
